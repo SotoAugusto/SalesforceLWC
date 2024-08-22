@@ -1,0 +1,15 @@
+<!--
+ - Created by ausoto on 2024-08-18.
+ -->
+
+<!-- Account Table -->
+<template>
+    <lightning-card title="Account Data ASG">
+        <lightning-datatable
+                key-field="Id"
+                data={accounts.data}
+                columns={columns}
+                hide-checkbox-column="true">
+        </lightning-datatable>
+    </lightning-card>
+</template>
