@@ -36,8 +36,25 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   availableAccounts;
   initialRecords;
   columns = columns;
+  //handle inline editing TODO
   draftValues = [];
-  extraFields = ', BillingCity';
+
+  //submit button filters
+    //test
+
+  fields = ['BillingCity', 'BillingCountry', 'BillingPostalCode', 'Phone'];
+  whereClauses = {
+    BillingCity: 'Lawrence',
+    BillingCountry: 'USA',
+    BillingPostalCode: '66045',
+    Phone: '(785) 241-6200'
+  };
+
+  // fields = [];
+  // whereClauses = {};
+
+  results = [];
+
 
   inputsArray = [
       {
@@ -60,9 +77,10 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
 
 
 
-
+//todo test without @wire
   // get accounts from controller, then save them to availableAccounts and initialRecords
-@wire(getAccounts,{ extraFields: '$extraFields' })
+@wire
+(getAccounts, { fields: '$fields', whereClauses: '$whereClauses' })
 //propertyOrFunction—A private property or function that receives the stream of data from the wire service.
 //If a property is decorated with @wire, the results are returned to the property’s data property or error property.
 //If a function is decorated with @wire, the results are returned in an object with a data property or an error property.
@@ -75,6 +93,7 @@ wiredAccount({error,data}){
     console.log('🚀 data from @wire getAccounts: ', data);
     this.availableAccounts = data;
     this.initialRecords = data;
+
   } else if(error){
     this.error = error;
     this.availableAccounts = undefined;
@@ -84,6 +103,7 @@ wiredAccount({error,data}){
 handleRowAction (event){
   const actionName = event.detail.action.name;
   const row = event.detail.row;
+  row.Id = undefined;
 
   switch (actionName){
     case 'view':
@@ -110,46 +130,6 @@ handleRowAction (event){
   }//end switch
 }//end handleRowAction
 
-
-
-
-//old search
-
-//handleSearch(event){
-//        const searchKey = event.target.value.toLowerCase();
-//          console.log('searchKey is ' + searchKey);
-//        if(searchKey){
-//                this.availableAccounts = this.initialRecords;
-//                console.log('Account records are '+ JSON.stringify(this.availableAccounts));
-//
-////! TODO refactor to use a map instead nested for
-//                if(this.availableAccounts){
-//                        let records = [];
-//                        for (let record of this.availableAccounts){
-//                                console.log('record is' + JSON.stringify(record));
-//                                let valuesArray = Object.values(record);
-//                                console.log('valuesArray is ' + JSON.stringify(valuesArray));
-//
-//                                for(let value of valuesArray){
-//                                        console.log('value is ' + value);
-//                                        let strValue = String (value);
-//                                        if(strValue){
-//                                                if(strValue.toLowerCase().includes(searchKey)){
-//                                                        records.push(record);
-//                                                        break;
-//                                                    }
-//                                            }
-//                                    }//end for value
-//                            }//end for record
-//                    this.availableAccounts = records;
-//                    }
-//            } else{
-//                    this.availableAccounts = this.initialRecords;
-//                }
-//    }
-
-
-
 handleSearch(event) {
   const searchKey = event.target.value.toLowerCase();
   console.log('searchKey is ' + searchKey);
@@ -167,7 +147,7 @@ handleSearch(event) {
         if (Object.values(record).some(value => String(value).toLowerCase().includes(searchKey))) {
           recordsMap.set(record.Id, record);
           console.log(recordsMap);
-          refreshApex(this.wiredAccount);
+//          refreshApex(this.wiredAccount);
         }
       });
       //convert the Map values back to an array
@@ -178,24 +158,70 @@ handleSearch(event) {
   }
 }
 
-
 handleExtraFields(event) {
-  const searchExtraFieldsKey = event.target.value.toLowerCase();
-  const inputName = event.target.dataset.name;
-  console.log(inputName);
+//    todo, how to access data-name value???
+  const field = event.target.dataset.name;
+  const value = event.target.value;
 
-  console.log('searchExtraFieldsKey is ' + searchExtraFieldsKey);
-
-  if (searchExtraFieldsKey) {
-    this.extraFields += searchExtraFieldsKey;
-    refreshApex(this.wiredAccount);
+  console.log('test:',field);
+  if (value) {
+    this.fields.push(field);
+    this.whereClauses[field] = value;
   }
-}//end hangleExtraFields
-
-handleButtonFields(){
-// check for ways to call apex
 }
 
+handleSubmit() {
+  getAccounts({ fields: this.fields, whereClauses: this.whereClauses })
+    .then(result => {
+      if (result) {
+          this.results = result;
+          console.log('Query Results:', this.results);
+      }
+//    todo once it's working, save results to availableAccounts
+  })
+    .catch(error => {
+    console.error('Error:', error);
+  });
+}//end handleSubmit
 
 
-}//end filterDataTatble
+}//end filterDataTable
+
+
+
+  //old search
+
+  //handleSearch(event){
+  //        const searchKey = event.target.value.toLowerCase();
+  //          console.log('searchKey is ' + searchKey);
+  //        if(searchKey){
+  //                this.availableAccounts = this.initialRecords;
+  //                console.log('Account records are '+ JSON.stringify(this.availableAccounts));
+  //
+  ////! TODO refactor to use a map instead nested for
+  //                if(this.availableAccounts){
+  //                        let records = [];
+  //                        for (let record of this.availableAccounts){
+  //                                console.log('record is' + JSON.stringify(record));
+  //                                let valuesArray = Object.values(record);
+  //                                console.log('valuesArray is ' + JSON.stringify(valuesArray));
+  //
+  //                                for(let value of valuesArray){
+  //                                        console.log('value is ' + value);
+  //                                        let strValue = String (value);
+  //                                        if(strValue){
+  //                                                if(strValue.toLowerCase().includes(searchKey)){
+  //                                                        records.push(record);
+  //                                                        break;
+  //                                                    }
+  //                                            }
+  //                                    }//end for value
+  //                            }//end for record
+  //                    this.availableAccounts = records;
+  //                    }
+  //            } else{
+  //                    this.availableAccounts = this.initialRecords;
+  //                }
+  //    }
+
+

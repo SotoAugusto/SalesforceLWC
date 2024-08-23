@@ -6,6 +6,8 @@
 <template>
     <lightning-card title="Accounts Card" icon-name="standard:account" >
         <div class=slds-m-around_medium>
+<!--            <lightning-input type="search" data-name="billingAddress" label="Billing Address" onchange={handleExtraFields} placeholder="Add extra fields"> </lightning-input>-->
+
             <lightning-input type="search" data-name="searchAccount" label="Search Account" onchange={handleSearch} placeholder="Search by any field"> </lightning-input>
 
             <template for:each={inputsArray} for:item="input">
@@ -13,10 +15,11 @@
             </template>
 
             <lightning-button
-                    variant="Neutral"
-                    label="Add fields"
-                    onclick={handleButtonFields}>
+                    variant="neutral"
+                    label="Search"
+                    onclick={handleSubmit}>
             </lightning-button>
+
                 <template if:true={availableAccounts}>
                     <lightning-datatable
                             key-field="Id"
