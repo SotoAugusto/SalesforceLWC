@@ -8,15 +8,26 @@
         <div class=slds-m-around_medium>
 <!--            <lightning-input type="search" data-name="billingAddress" label="Billing Address" onchange={handleExtraFields} placeholder="Add extra fields"> </lightning-input>-->
 
-            <lightning-input type="search" data-name="searchAccount" label="Search Account" onchange={handleSearch} placeholder="Search by any field"> </lightning-input>
-
-            <template for:each={inputsArray} for:item="input">
-                <lightning-input key={input.Id} label={input.label} type="search" data-name={input.dataName} onchange={handleExtraFields} placeholder="Add extra filter"> asd</lightning-input>
+            <lightning-input type="search"
+                             data-name="searchAccount"
+                             label="Search Account"
+                             onchange={handleSearch}
+                             placeholder="Search by any field"> </lightning-input>
+            <!--Render Lists-->
+            <template for:each={accountInputFields} for:item="input">
+                <lightning-input
+                        key={input.Id}
+                        label={input.label}
+                        type="search"
+                        data-name={input.dataName}
+                        onchange={handleAccountInputFields}
+                        placeholder="Add extra filter"></lightning-input>
             </template>
 
             <lightning-button
+                    class="slds-p-around_large slds-m-around_medium"
                     variant="neutral"
-                    label="Search"
+                    label="Search records"
                     onclick={handleSubmit}>
             </lightning-button>
 

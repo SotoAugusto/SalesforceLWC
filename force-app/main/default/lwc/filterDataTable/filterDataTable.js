@@ -38,49 +38,98 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   columns = columns;
   //handle inline editing TODO
   draftValues = [];
+  error;
+  // whereClauses = {
+  // // key, value
+  //   BillingCity: 'Lawrence',
+  //   BillingCountry: 'USA',
+  //   BillingPostalCode: '66045',
+  //   Phone: '(785) 241-6200'
+  // };
 
-  //submit button filters
-    //test
+  whereClauses = {};
 
-  fields = ['BillingCity', 'BillingCountry', 'BillingPostalCode', 'Phone'];
-  whereClauses = {
-    BillingCity: 'Lawrence',
-    BillingCountry: 'USA',
-    BillingPostalCode: '66045',
-    Phone: '(785) 241-6200'
-  };
-
-  // fields = [];
-  // whereClauses = {};
-
-  results = [];
-
-
-  inputsArray = [
-      {
-        label: 'Billing Address',
-        dataName: 'billingAddress'
-      },
+  accountInputFields = [
     {
-      label: 'Billing Postal Code',
-      dataName: 'billingPostalCode'
+      dataName: 'billingStreet',
+      label: 'Billing Street'
     },
     {
-      label: 'Billing Country',
-      dataName: 'billingCountry'
+      dataName: 'billingCity',
+      label: 'Billing City'
     },
     {
-    label: 'Created Date',
-    dataName: 'createdDate'
+      dataName: 'billingState',
+      label: 'Billing State'
     },
+    {
+      dataName: 'billingPostalCode',
+      label: 'Billing Postal Code'
+    },
+    {
+      dataName: 'billingCountry',
+      label: 'Billing Country'
+    },
+    {
+      dataName: 'shippingStreet',
+      label: 'Shipping Street'
+    },
+    {
+      dataName: 'shippingCity',
+      label: 'Shipping City'
+    },
+    {
+      dataName: 'shippingState',
+      label: 'Shipping State'
+    },
+    {
+      dataName: 'shippingPostalCode',
+      label: 'Shipping Postal Code'
+    },
+    {
+      dataName: 'shippingCountry',
+      label: 'Shipping Country'
+    },
+    {
+      dataName: 'phone',
+      label: 'Phone'
+    },
+    {
+      dataName: 'fax',
+      label: 'Fax'
+    },
+    {
+      dataName: 'accountNumber',
+      label: 'Account Number'
+    },
+    {
+      dataName: 'website',
+      label: 'Website'
+    },
+    {
+      dataName: 'photoUrl',
+      label: 'Photo URL'
+    },
+    {
+      dataName: 'sic',
+      label: 'Sic'
+    },
+    {
+      dataName: 'numberOfEmployees',
+      label: 'Number of Employees'
+    },
+    {
+      dataName: 'ownership',
+      label: 'Ownership'
+    }
   ];
 
 
 
-//todo test without @wire
-  // get accounts from controller, then save them to availableAccounts and initialRecords
-@wire
-(getAccounts, { fields: '$fields', whereClauses: '$whereClauses' })
+
+// wire runs on page load
+// get all account records from controller, then save them to availableAccounts and initialRecords for display
+@wire(getAccounts, {whereClauses: '$whereClauses' })
 //propertyOrFunction—A private property or function that receives the stream of data from the wire service.
 //If a property is decorated with @wire, the results are returned to the property’s data property or error property.
 //If a function is decorated with @wire, the results are returned in an object with a data property or an error property.
@@ -136,92 +185,77 @@ handleSearch(event) {
 
   if (searchKey) {
     this.availableAccounts = this.initialRecords;
-    //        console.log('Account records are '+ JSON.stringify(this.availableAccounts));
+    //        console.log('Account records are', JSON.stringify(this.availableAccounts));
 
     if (this.availableAccounts) {
       const recordsMap = new Map();
-      //            filter results on each keystroke and save them to a Map
-      //go through the list and for each record, then, for each field and check if it matches with searchkey
-      // if matches, save the record to the map
+      //filter results on each keystroke and save them to a Map
+      //go through the list and for each record, then, for each field and check if it matches with searchKey
+      //if matches, save the record to the map
       this.availableAccounts.forEach(record => {
         if (Object.values(record).some(value => String(value).toLowerCase().includes(searchKey))) {
           recordsMap.set(record.Id, record);
-          console.log(recordsMap);
-//          refreshApex(this.wiredAccount);
         }
       });
       //convert the Map values back to an array
       this.availableAccounts = Array.from(recordsMap.values());
+      console.log(recordsMap);
     }//end if
   } else {
     this.availableAccounts = this.initialRecords;
   }
 }
 
-handleExtraFields(event) {
-//    todo, how to access data-name value???
+// listen to the user inputs on the filter fields, save it on the whereClauses map
+handleAccountInputFields(event) {
+  // save the name of the field
   const field = event.target.dataset.name;
-  const value = event.target.value;
+  // save value (criteria) of input
+  const criteria = event.target.value;
 
-  console.log('test:',field);
-  if (value) {
-    this.fields.push(field);
-    this.whereClauses[field] = value;
+  console.log('input data-name:',field);
+  console.log('input value:',criteria);
+
+  // if the input has a value (criteria), save it in to the map
+  if (criteria) {
+    this.whereClauses[field] = criteria;
+    // console.log(this.whereClauses);
   }
 }
 
-handleSubmit() {
-  getAccounts({ fields: this.fields, whereClauses: this.whereClauses })
-    .then(result => {
-      if (result) {
-          this.results = result;
-          console.log('Query Results:', this.results);
-      }
-//    todo once it's working, save results to availableAccounts
-  })
-    .catch(error => {
-    console.error('Error:', error);
-  });
-}//end handleSubmit
+  async handleSubmit() {
+    try {
+      // send whereClauses map, returns SOQL with the new criteria filtered
+      this.availableAccounts = await getAccounts({ whereClauses: this.whereClauses });
+      this.error = undefined;
+      console.log('🚀 data from imperative getAccounts with submit button: ', this.availableAccounts);
+      // TODO how can i console log my map?
+      // console.log(JSON.stringify([this.whereClauses.entries()]));
+      // console.log([...this.whereClauses.entries()]);
+      // console.log([...Object.entries(this.whereClauses)]);
+
+    } catch (error) {
+      this.error = error;
+      this.availableAccounts = undefined;
+
+      console.log(this.error);
+
+    }
+  }//end handleSubmit
+
+//   getAccounts({whereClauses: this.whereClauses })
+//     .then(result => {
+//       if (result) {
+//           this.results = result;
+//           console.log('Query Results:', this.results);
+//       }
+// //    todo once it's working, save results to availableAccounts
+//   })
+//     .catch(error => {
+//     console.error('Error:', error);
+//   });
+
 
 
 }//end filterDataTable
-
-
-
-  //old search
-
-  //handleSearch(event){
-  //        const searchKey = event.target.value.toLowerCase();
-  //          console.log('searchKey is ' + searchKey);
-  //        if(searchKey){
-  //                this.availableAccounts = this.initialRecords;
-  //                console.log('Account records are '+ JSON.stringify(this.availableAccounts));
-  //
-  ////! TODO refactor to use a map instead nested for
-  //                if(this.availableAccounts){
-  //                        let records = [];
-  //                        for (let record of this.availableAccounts){
-  //                                console.log('record is' + JSON.stringify(record));
-  //                                let valuesArray = Object.values(record);
-  //                                console.log('valuesArray is ' + JSON.stringify(valuesArray));
-  //
-  //                                for(let value of valuesArray){
-  //                                        console.log('value is ' + value);
-  //                                        let strValue = String (value);
-  //                                        if(strValue){
-  //                                                if(strValue.toLowerCase().includes(searchKey)){
-  //                                                        records.push(record);
-  //                                                        break;
-  //                                                    }
-  //                                            }
-  //                                    }//end for value
-  //                            }//end for record
-  //                    this.availableAccounts = records;
-  //                    }
-  //            } else{
-  //                    this.availableAccounts = this.initialRecords;
-  //                }
-  //    }
-
 

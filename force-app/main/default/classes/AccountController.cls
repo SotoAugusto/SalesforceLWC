@@ -6,11 +6,11 @@ public class AccountController {
 //    @AuraEnabled enables Lightning components to access Apex methods and properties.
 //    To improve runtime performance, set @AuraEnabled(cacheable=true) to cache the method results on the client.
 //    To set cacheable=true, a method must only get data. It can’t mutate data.
-    @AuraEnabled(cacheable=false)
-    public static List<Account> getAccounts(List<String> fields, Map<String, String> whereClauses) {
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(Map<String, String> whereClauses) {
         // combine default fields with the fields the user added
         List<String> defaultFields = new List<String>{'Id', 'Name', 'Industry','AnnualRevenue'};
-        defaultFields.addAll(fields);
+        defaultFields.addAll(whereClauses.keySet());
 
         // add commas between values of all fields
         String fieldList = String.join(new List<String>(defaultFields), ', ');
