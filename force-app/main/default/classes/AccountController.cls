@@ -34,6 +34,16 @@ public class AccountController {
         System.debug(Database.query(query));
         return Database.query(query);
     }//end function
+
+    @AuraEnabled(cacheable=true)
+    public static List<Account> updateAccount(String recordId) {
+        return [
+                SELECT Id, Name, Industry, AnnualRevenue
+                FROM Account
+                WHERE Id = :recordId
+                WITH SECURITY_ENFORCED
+        ];
+    }
 }//end class
 
 
