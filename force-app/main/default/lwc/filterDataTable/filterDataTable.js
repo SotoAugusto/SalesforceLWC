@@ -22,8 +22,17 @@ const ACTIONS = [
         {label: 'View', name: 'view'},
         {label: 'Edit', name: 'edit'},
     ];
-
+//TODO WIP LINES 27-35 HYPERLINK ON DATATABLE
 const COLUMNS = [
+  {
+    label: 'Name',
+    fieldName: 'Name',
+    type: 'url',
+    typeAttributes: {
+      label: { fieldName: 'Name' }, // Display the record name as the link text
+      url: 'https://insulet-6b-dev-ed.develop.lightning.force.com/lightning/r/Account/{Id}/view' // Replace '{Id}' with the actual record ID
+    }
+  },
         {label: 'Name', fieldName:'Name', editable:true},
         {label: 'Industry', fieldName:'Industry', editable:true},
         {label: 'AnnualRevenue', fieldName:'AnnualRevenue', editable:true},
@@ -181,11 +190,15 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
 //   }
 // }
 
+  //todo WIP
+handleHyperlink (event){
+  const row = event.detail.row;
+
+}
 
   handleRowAction (event){
     const actionName = event.detail.action.name;
     const row = event.detail.row;
-    row.Id = undefined;
 
     switch (actionName){
       case 'view':
