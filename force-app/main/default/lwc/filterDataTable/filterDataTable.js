@@ -16,13 +16,12 @@ import { refreshApex } from "@salesforce/apex";
 import { updateRecord } from "lightning/uiRecordApi";
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
-//array of objects with two properties
 // dropdown actions
 const ACTIONS = [
         {label: 'View', name: 'view'},
         {label: 'Edit', name: 'edit'},
     ];
-//TODO WIP LINES 27-35 HYPERLINK ON DATATABLE
+//TODO WIP LINES 27-35 HYPERLINK ON DATATABLE, how to pass id?
 const COLUMNS = [
   {
     label: 'Name',
@@ -30,7 +29,7 @@ const COLUMNS = [
     type: 'url',
     typeAttributes: {
       label: { fieldName: 'Name' }, // Display the record name as the link text
-      url: 'https://insulet-6b-dev-ed.develop.lightning.force.com/lightning/r/Account/{Id}/view' // Replace '{Id}' with the actual record ID
+      url: 'https://insulet-6b-dev-ed.develop.lightning.force.com/lightning/r/Account/{Id}/view'
     }
   },
         {label: 'Name', fieldName:'Name', editable:true},
@@ -50,6 +49,7 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   //handle inline editing TODO
   draftValues = [];
   error;
+  value = [];
 
 
   // whereClauses = {
@@ -61,79 +61,108 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   // };
 
   whereClauses = {};
+  //todo, see how to reuse values from accountInputFields
+  get optionsFilterCheckbox() {
+    return [
+      { label: 'Billing Street', value: 'billingStreet' },
+      { label: 'Billing City', value: 'billingCity' },
+      { label: 'Billing State', value: 'billingState' },
+      { label: 'Billing Postal Code', value: 'billingPostalCode' },
+      { label: 'Billing Country', value: 'billingCountry' },
+      {label: 'Billing Street', value: 'shippingStreet' },
+    ];
 
+  }
   accountInputFields = [
     {
       dataName: 'billingStreet',
-      label: 'Billing Street'
+      label: 'Billing Street',
+      isVisible: false
     },
     {
       dataName: 'billingCity',
-      label: 'Billing City'
+      label: 'Billing City',
+      isVisible: false
     },
     {
       dataName: 'billingState',
-      label: 'Billing State'
+      label: 'Billing State',
+      isVisible: false
     },
     {
       dataName: 'billingPostalCode',
-      label: 'Billing Postal Code'
+      label: 'Billing Postal Code',
+      isVisible: false
     },
     {
       dataName: 'billingCountry',
-      label: 'Billing Country'
+      label: 'Billing Country',
+      isVisible: false
     },
     {
       dataName: 'shippingStreet',
-      label: 'Shipping Street'
+      label: 'Shipping Street',
+      isVisible: false
     },
     {
       dataName: 'shippingCity',
-      label: 'Shipping City'
+      label: 'Shipping City',
+      isVisible: false
     },
     {
       dataName: 'shippingState',
-      label: 'Shipping State'
+      label: 'Shipping State',
+      isVisible: false
     },
     {
       dataName: 'shippingPostalCode',
-      label: 'Shipping Postal Code'
+      label: 'Shipping Postal Code',
+      isVisible: false
     },
     {
       dataName: 'shippingCountry',
-      label: 'Shipping Country'
+      label: 'Shipping Country',
+      isVisible: false
     },
     {
       dataName: 'phone',
-      label: 'Phone'
+      label: 'Phone',
+      isVisible: false
     },
     {
       dataName: 'fax',
-      label: 'Fax'
+      label: 'Fax',
+      isVisible: false
     },
     {
       dataName: 'accountNumber',
-      label: 'Account Number'
+      label: 'Account Number',
+      isVisible: false
     },
     {
       dataName: 'website',
-      label: 'Website'
+      label: 'Website',
+      isVisible: false
     },
     {
       dataName: 'photoUrl',
-      label: 'Photo URL'
+      label: 'Photo URL',
+      isVisible: false
     },
     {
       dataName: 'sic',
-      label: 'Sic'
+      label: 'Sic',
+      isVisible: false
     },
     {
       dataName: 'numberOfEmployees',
-      label: 'Number of Employees'
+      label: 'Number of Employees',
+      isVisible: false
     },
     {
       dataName: 'ownership',
-      label: 'Ownership'
+      label: 'Ownership',
+      isVisible: false
     }
   ];
 
@@ -190,7 +219,7 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
 //   }
 // }
 
-  //todo WIP
+  //todo WIP hyperlink on datatable
 handleHyperlink (event){
   const row = event.detail.row;
 
@@ -268,34 +297,31 @@ handleAccountInputFields(event) {
     // console.log(this.whereClauses);
   }
 }
-  // https://developer.salesforce.com/docs/platform/lwc/guide/apex-call-imperative.html
-   handleSubmit() {
-    // try {
-    //   // send whereClauses map, returns SOQL with the new criteria filtered
-    //   this.availableAccounts = await getAccounts({ whereClauses: this.whereClauses });
-    //   this.error = undefined;
-    //   console.log('🚀 data from imperative getAccounts with submit button: ', this.availableAccounts);
-    //   // TODO how can i console log my map?
-    //   // console.log(JSON.stringify([this.whereClauses.entries()]));
-    //   // console.log([...this.whereClauses.entries()]);
-    //   // console.log([...Object.entries(this.whereClauses)]);
-    //
-    // } catch (error) {
-    //   this.error = error;
-    //   this.availableAccounts = undefined;
-    //
-    //   console.log(this.error);
-    //
-    // }
+handleSubmit() {
   try{
     this.getAccountData(this.whereClauses);
-
   }catch (error) {
     console.error('error:',error);
   }
 
-  }//end handleSubmit
+}//end handleSubmit
 
+
+
+  get selectedValues() {
+    return this.value.join(',');
+
+  }
+
+  handleChangeFilterCheckbox(event) {
+    const selectedValues = event.detail.value;
+    this.value = selectedValues;
+
+    this.accountInputFields.forEach(field => {
+      field.isVisible = selectedValues.includes(field.dataName);
+    });
+  }
+  // TODO WIP Save inline editing, add spinner, call apex to save and reload
   async handleSave(event) {
     // Convert datatable draft values into record objects
     const records = event.detail.draftValues.slice().map((draftValue) => {
