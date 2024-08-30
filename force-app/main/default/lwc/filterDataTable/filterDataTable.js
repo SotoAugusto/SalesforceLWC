@@ -293,7 +293,10 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
             this.getAccountData(this.whereClauses);
         } catch (error) {
             console.error('error:', error);
+        } finally {
+            this.whereClauses = {};
         }
+
 
     }//end handleSubmit
 

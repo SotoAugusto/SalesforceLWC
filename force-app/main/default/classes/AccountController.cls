@@ -35,20 +35,6 @@ public class AccountController {
         return Database.query(query);
     }//end function
 
-    @AuraEnabled
-    public static String updateAccount(Object data) {
-        List<Account> accountsForUpdate = (List<Account>) JSON.deserialize(
-                JSON.serialize(data),
-                List<Account>.class
-        );
-        try {
-            update accountsForUpdate;
-            return 'Success: accounts updated successfully';
-        }
-        catch (Exception e) {
-            return 'The following exception has occurred: ' + e.getMessage();
-        }
-    }
 
 //lwc recipes
     @AuraEnabled
