@@ -18,7 +18,6 @@ import NAME_FIELD from '@salesforce/schema/Account.Name';
 import INDUSTRY_FIELD from '@salesforce/schema/Account.Industry';
 import ANNUAL_REVENUE_FIELD from '@salesforce/schema/Account.AnnualRevenue';
 
-import {notifyRecordUpdateAvailable, updateRecord} from "lightning/uiRecordApi";
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 // dropdown actions
@@ -329,9 +328,24 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
         this.draftValues = [];
 
         updateAccounts({accountsForUpdate: updatedFields}).then(() => {
+            // Report success with a toast
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: "Success",
+                    message: "Records updated",
+                    variant: "success"
+                })
+            );
             return this.getAccountData(this.whereClauses);
         }).catch(error => {
             console.error('error:', error);
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: "Error updating or reloading contacts",
+                    message: error.body.message,
+                    variant: "error"
+                })
+            );
         }).finally(() => {
             return this.isLoading = false;
         })
