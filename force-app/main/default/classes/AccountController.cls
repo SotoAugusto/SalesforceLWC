@@ -6,7 +6,7 @@ public class AccountController {
 //    @AuraEnabled enables Lightning components to access Apex methods and properties.
 //    To improve runtime performance, set @AuraEnabled(cacheable=true) to cache the method results on the client.
 //    To set cacheable=true, a method must only get data. It can’t mutate data.
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Account> getAccounts(Map<String, String> whereClauses) {
         // combine default fields with the fields the user added
         List<String> defaultFields = new List<String>{'Id', 'Name', 'Industry','AnnualRevenue'};
@@ -35,15 +35,29 @@ public class AccountController {
         return Database.query(query);
     }//end function
 
-    @AuraEnabled(cacheable=true)
-    public static List<Account> updateAccount(String recordId) {
-        return [
-                SELECT Id, Name, Industry, AnnualRevenue
-                FROM Account
-                WHERE Id = :recordId
-                WITH SECURITY_ENFORCED
-        ];
+    @AuraEnabled
+    public static String updateAccount(Object data) {
+        List<Account> accountsForUpdate = (List<Account>) JSON.deserialize(
+                JSON.serialize(data),
+                List<Account>.class
+        );
+        try {
+            update accountsForUpdate;
+            return 'Success: accounts updated successfully';
+        }
+        catch (Exception e) {
+            return 'The following exception has occurred: ' + e.getMessage();
+        }
     }
+
+//lwc recipes
+    @AuraEnabled
+    public static void updateAccounts(List<Account> accountsForUpdate) {
+        update accountsForUpdate;
+    }
+
+
+
 }//end class
 
 

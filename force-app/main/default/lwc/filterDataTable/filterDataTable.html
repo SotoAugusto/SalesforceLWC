@@ -70,6 +70,9 @@
                         draft-values={draftValues}>
                 </lightning-datatable>
             </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </template>
             <template if:true={error}>
                 {error}
             </template>
