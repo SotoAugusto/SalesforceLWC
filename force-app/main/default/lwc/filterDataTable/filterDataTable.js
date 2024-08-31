@@ -44,119 +44,41 @@ const COLUMNS = [
 
 
 export default class FilterDataTable extends NavigationMixin(LightningElement) {
+    // @track only to arrays and objects
     @track availableAccounts;
     @track initialRecords;
-    @track columns = COLUMNS;
+    columns = COLUMNS;
     @track draftValues = [];
-    @track error;
+    error;
     @track value = [];
     @track whereClauses = {};
+    isLoading = false;
 
-    //todo, see how to reuse values from accountInputFields
+    inputArray = [
+        {label: 'Billing Street', value: 'billingStreet'},
+        {label: 'Billing City', value: 'billingCity'},
+        {label: 'Billing State', value: 'billingState'},
+        {label: 'Billing Postal Code', value: 'billingPostalCode'},
+        {label: 'Billing Country', value: 'billingCountry'},
+        {label: 'Shipping City', value: 'shippingCity'},
+        {label: 'Shipping State', value: 'shippingState'},
+        {label: 'Shipping Postal Code', value: 'shippingPostalCode'},
+        {label: 'Shipping Country', value: 'shippingCountry'},
+        {label: 'Phone', value: 'phone'},
+        {label: 'Fax', value: 'fax'},
+        {label: 'Account Number', value: 'accountNumber'},
+        {label: 'Number of Employees', value: 'numberOfEmployees'},
+    ];
+
     get optionsFilterCheckbox() {
-        return [
-            {label: 'Billing Street', value: 'billingStreet'},
-            {label: 'Billing City', value: 'billingCity'},
-            {label: 'Billing State', value: 'billingState'},
-            {label: 'Billing Postal Code', value: 'billingPostalCode'},
-            {label: 'Billing Country', value: 'billingCountry'},
-            {label: 'Billing Street', value: 'shippingStreet'},
-        ];
-
+        return [...this.inputArray];
     }
 
-    accountInputFields = [
-        {
-            dataName: 'billingStreet',
-            label: 'Billing Street',
-            isVisible: false
-        },
-        {
-            dataName: 'billingCity',
-            label: 'Billing City',
-            isVisible: false
-        },
-        {
-            dataName: 'billingState',
-            label: 'Billing State',
-            isVisible: false
-        },
-        {
-            dataName: 'billingPostalCode',
-            label: 'Billing Postal Code',
-            isVisible: false
-        },
-        {
-            dataName: 'billingCountry',
-            label: 'Billing Country',
-            isVisible: false
-        },
-        {
-            dataName: 'shippingStreet',
-            label: 'Shipping Street',
-            isVisible: false
-        },
-        {
-            dataName: 'shippingCity',
-            label: 'Shipping City',
-            isVisible: false
-        },
-        {
-            dataName: 'shippingState',
-            label: 'Shipping State',
-            isVisible: false
-        },
-        {
-            dataName: 'shippingPostalCode',
-            label: 'Shipping Postal Code',
-            isVisible: false
-        },
-        {
-            dataName: 'shippingCountry',
-            label: 'Shipping Country',
-            isVisible: false
-        },
-        {
-            dataName: 'phone',
-            label: 'Phone',
-            isVisible: false
-        },
-        {
-            dataName: 'fax',
-            label: 'Fax',
-            isVisible: false
-        },
-        {
-            dataName: 'accountNumber',
-            label: 'Account Number',
-            isVisible: false
-        },
-        {
-            dataName: 'website',
-            label: 'Website',
-            isVisible: false
-        },
-        {
-            dataName: 'photoUrl',
-            label: 'Photo URL',
-            isVisible: false
-        },
-        {
-            dataName: 'sic',
-            label: 'Sic',
-            isVisible: false
-        },
-        {
-            dataName: 'numberOfEmployees',
-            label: 'Number of Employees',
-            isVisible: false
-        },
-        {
-            dataName: 'ownership',
-            label: 'Ownership',
-            isVisible: false
-        }
-    ];
+    accountInputFields = this.inputArray.map((item) => ({
+        dataName: item.value,
+        label: item.label,
+        isVisible: false
+    }));
 
 
 //imperative apex method call to get db data
@@ -167,7 +89,7 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
                     console.log('🚀 data from imperative getAccounts: ', data);
                     data = JSON.parse(JSON.stringify(data));
                     data.forEach(res => {
-                      res.accLink = '/' + res.Id;
+                        res.accLink = '/' + res.Id;
                     });
 
                     this.availableAccounts = data;
@@ -300,13 +222,13 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
 
     }//end handleSubmit
 
-//checkbox
+//checkbox list of selected as string
     get selectedValues() {
         return this.value.join(',');
 
     }
 
-//checkbox
+//checkbox change selected inputs to visible
     handleChangeFilterCheckbox(event) {
         const selectedValues = event.detail.value;
         this.value = selectedValues;
@@ -315,10 +237,6 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
             field.isVisible = selectedValues.includes(field.dataName);
         });
     }
-
-
-    @track isLoading = false;
-
 
     handleSave(event) {
 
