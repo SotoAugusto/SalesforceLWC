@@ -21,9 +21,9 @@ export default class Counts extends LightningElement {
   }
   handleMessage(message) {
     this.priorCount = this.counter;
-    if (message.operator == "add") {
+    if (message.operator === "add") {
       this.counter += message.constant;
-    } else if (message.operator == "subtract") {
+    } else if (message.operator === "subtract") {
       this.counter -= message.constant;
     } else {
       this.counter *= message.constant;

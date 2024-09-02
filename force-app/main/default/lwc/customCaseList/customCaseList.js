@@ -2,7 +2,7 @@
  * Created by ausoto on 2024-09-02.
  */
 
-import { LightningElement, wire, api } from "lwc";
+import { LightningElement, wire } from "lwc";
 import { gql, graphql } from "lightning/uiGraphQLApi";
 import Id from "@salesforce/user/Id";
 import CaseModal from "c/customCaseModal";
@@ -48,7 +48,7 @@ export default class CustomCaseList extends LightningElement {
     `,
     variables: "$params",
   })
-  graphqlQueryResult({ data, errors }) {
+  graphqlQueryResult({ data }) {
     if (data) {
       this.cases = data.uiapi.query.Case.edges.map((edge) => edge.node);
     }
