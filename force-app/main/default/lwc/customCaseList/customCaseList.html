@@ -1,0 +1,24 @@
+<!--
+ - Created by ausoto on 2024-09-02.
+ -->
+
+<!-- Custom Case List -->
+<template>
+    <article class="slds-card">
+        <div class="slds-page-header card_header">
+            <header class="slds-media slds-media_center">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">My Cases (parent component)</h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-m-around_medium">
+            <template for:each={cases} for:item="rec">
+                <c-custom-case-item record={rec} key={rec.index} onviewcase={handleViewCase}></c-custom-case-item>
+            </template>
+        </div>
+    </article>
+</template>

@@ -1,0 +1,21 @@
+<!--
+ - Created by ausoto on 2024-09-02.
+ -->
+
+<!-- Custom Case Item -->
+<template>
+    <div class="slds-p-vertical_small">
+        <lightning-tile type="media">
+            <lightning-icon slot="media" icon-name="action:priority" size="small" class={record.Priority.value}></lightning-icon>
+            <div>
+                <a onclick={viewCase}>{record.Subject.value}</a>
+                <ul class="slds-list_horizontal slds-has-dividers_right">
+                    <li class="slds-item">{record.Status.value}</li>
+                    <li class="slds-item">
+                        <lightning-formatted-date-time value={record.CreatedDate.value} day="numeric" month="numeric" year="numeric" hour="numeric" minute="2-digit"></lightning-formatted-date-time>
+                    </li>
+                </ul>
+            </div>
+        </lightning-tile>
+    </div>
+</template>
