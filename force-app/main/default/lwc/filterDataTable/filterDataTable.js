@@ -2,7 +2,7 @@
  * Created by ausoto on 2024-08-19.
  */
 
-import {LightningElement, track, wire} from 'lwc';
+import {LightningElement, track} from 'lwc';
 //import apex shortcut
 //get records from soql
 import getAccounts from '@salesforce/apex/AccountController.getAccounts';
@@ -10,14 +10,6 @@ import updateAccounts from '@salesforce/apex/AccountController.updateAccounts';
 //import lightning shortcut
 //for actions
 import {NavigationMixin} from 'lightning/navigation';
-//update db
-import {refreshApex} from "@salesforce/apex";
-//update ui
-import ACCOUNT_OBJECT from '@salesforce/schema/Account';
-import NAME_FIELD from '@salesforce/schema/Account.Name';
-import INDUSTRY_FIELD from '@salesforce/schema/Account.Industry';
-import ANNUAL_REVENUE_FIELD from '@salesforce/schema/Account.AnnualRevenue';
-
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 // dropdown actions
@@ -129,7 +121,6 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
 //     console.log('🚀 data from @wire getAccounts: ', data);
 //     this.availableAccounts = data;
 //     this.initialRecords = data;
-//
 //   } else if(error){
 //     this.error = error;
 //     this.availableAccounts = undefined;
