@@ -4,7 +4,7 @@
 
 <!-- Filter Data Table -->
 <template>
-    <lightning-card title="Accounts Card" icon-name="standard:account" >
+    <lightning-card title="Accounts Card (filterDataTable)" icon-name="standard:account" >
         <div class=slds-m-around_medium>
             <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-center">
                 <div class="slds-col slds-size_1-of-5 slds-hidden"></div>
@@ -70,6 +70,12 @@
                         onsave={handleSave}
                         draft-values={draftValues}>
                 </lightning-datatable>
+<!--                TODO: instead of sending through an input, send via a url on the datatable-->
+                <lightning-card title="Send through LMS to unrelated component">
+                    <lightning-input label="Input recordID here" data-id="recordID"></lightning-input>
+                    <lightning-button label="Send" onclick={sendMessage}></lightning-button>
+                </lightning-card>
+
             </template>
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>

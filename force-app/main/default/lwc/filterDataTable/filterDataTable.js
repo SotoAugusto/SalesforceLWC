@@ -2,7 +2,7 @@
  * Created by ausoto on 2024-08-19.
  */
 
-import { LightningElement, track } from "lwc";
+import { LightningElement, track, wire } from "lwc";
 //import apex shortcut
 //get records from soql
 import getAccounts from "@salesforce/apex/AccountController.getAccounts";
@@ -11,6 +11,8 @@ import updateAccounts from "@salesforce/apex/AccountController.updateAccounts";
 //for actions
 import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { publish, MessageContext } from "lightning/messageService";
+import MY_MESSAGE_CHANNEL from "@salesforce/messageChannel/MyMessageChannel__c";
 
 // dropdown actions
 const ACTIONS = [
@@ -83,7 +85,6 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
           console.log("🚀 data from imperative getAccounts: ", data);
           data = JSON.parse(JSON.stringify(data));
           data.forEach((res) => {
-            res.Id = undefined;
             res.accLink = "/" + res.Id;
           });
 
@@ -260,4 +261,28 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
         return (this.isLoading = false);
       });
   } //end handleSave
+
+  //LMS
+  // TODO: instead of sending through an input, send via a url on the datatable
+
+  @wire(MessageContext)
+  messageContext;
+
+  // sendMessage(event) {
+  //   const payload = {
+  //     value: event.target.value,
+  //   };
+  //   // sender of message
+  //   publish(this.messageContext, MY_MESSAGE_CHANNEL, payload);
+  // }
+  sendMessage() {
+    const inputElement = this.template.querySelector(
+      'lightning-input[data-id="recordID"]',
+    );
+    const payload = {
+      value: inputElement.value,
+    };
+    // sender of message
+    publish(this.messageContext, MY_MESSAGE_CHANNEL, payload);
+  }
 } //end filterDataTable
