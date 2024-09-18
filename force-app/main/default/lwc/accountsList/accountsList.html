@@ -1,0 +1,51 @@
+<template>
+    <lightning-card title="Account data (accountsList)" class="slds-m-around_large">
+        <lightning-record-edit-form record-id={value} object-api-name={objectApiName}>
+            <template lwc:if={value}>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-3">
+                    <label>
+                        <strong>Name: </strong>
+                    </label>
+                    <lightning-formatted-text value={name} class="">
+                    </lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <label>
+                        <strong>Industry: </strong>
+                    </label>
+                    <lightning-formatted-text value={industry} class="">
+                    </lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <label>
+                        <strong>Annual Revenue: </strong>
+                    </label>
+                    <lightning-formatted-number value={annualRevenue} class="">
+                    </lightning-formatted-number>
+                </div>
+            </div>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-3">
+                    <label>
+                        <strong>Owner: </strong>
+                    </label>
+                    <lightning-formatted-text value={owner} class="">
+                    </lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <label>
+                        <strong>Phone: </strong>
+                    </label>
+                    <lightning-formatted-text value={phone} class="">
+                    </lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                        <p> <strong>Value received from MessageChannel:</strong> {value}</p>
+                </div>
+            </div>
+                    </template>
+        </lightning-record-edit-form>
+
+    </lightning-card>
+</template>
