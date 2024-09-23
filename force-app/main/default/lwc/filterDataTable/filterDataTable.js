@@ -11,6 +11,7 @@ import updateAccounts from "@salesforce/apex/AccountController.updateAccounts";
 //for actions
 import { NavigationMixin } from "lightning/navigation";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+// LMS
 import { publish, MessageContext } from "lightning/messageService";
 import MY_MESSAGE_CHANNEL from "@salesforce/messageChannel/MyMessageChannel__c";
 
@@ -32,7 +33,7 @@ const COLUMNS = [
     type: "button",
     typeAttributes: {
       label: "Send ID",
-      name: "send_id",
+      name: "send_id_to_LMS",
       variant: "base",
     },
   },
@@ -143,7 +144,7 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
     const row = event.detail.row;
 
     switch (actionName) {
-      case "send_id":
+      case "send_id_to_LMS":
         this.sendMessage(row.Id);
         break;
       case "view":
@@ -275,6 +276,7 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   } //end handleSave
 
   //LMS
+  // https://developer.salesforce.com/docs/platform/lwc/guide/use-message-channel-publish.html
   // Send through LMS to unrelated component (accountsLists)
 
   @wire(MessageContext)
