@@ -1,6 +1,6 @@
 // component that receives info from filterDataTable via LMS
 import { LightningElement, api, wire, track } from "lwc";
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import { getRecord } from "lightning/uiRecordApi";
 import ACCOUNT_OBJECT from "@salesforce/schema/Account";
 import NAME_FIELD from "@salesforce/schema/Account.Name";
 import INDUSTRY_FIELD from "@salesforce/schema/Account.Industry";
@@ -13,6 +13,13 @@ import MY_MESSAGE_CHANNEL from "@salesforce/messageChannel/MyMessageChannel__c";
 export default class MyComponent extends LightningElement {
   //LMS
   @track value; //value received through channel, this will be my recordID
+  fields = [
+    NAME_FIELD,
+    INDUSTRY_FIELD,
+    ANNUAL_REVENUE_FIELD,
+    PHONE_FIELD,
+    OWNER_NAME_FIELD,
+  ];
   subscription; //subscribe to channel
   @wire(MessageContext)
   messageContext;
@@ -37,35 +44,10 @@ export default class MyComponent extends LightningElement {
   // LDS
 
   @api objectApiName = ACCOUNT_OBJECT.objectApiName;
-
+  // https://developer.salesforce.com/docs/component-library/bundle/lightning-record-form/documentation
   @wire(getRecord, {
     recordId: "$value",
-    fields: [
-      NAME_FIELD,
-      INDUSTRY_FIELD,
-      ANNUAL_REVENUE_FIELD,
-      PHONE_FIELD,
-      OWNER_NAME_FIELD,
-    ],
+    fields: "$fields",
   })
   account;
-
-  get name() {
-    return getFieldValue(this.account.data, NAME_FIELD);
-  }
-
-  get phone() {
-    return getFieldValue(this.account.data, PHONE_FIELD);
-  }
-
-  get industry() {
-    return getFieldValue(this.account.data, INDUSTRY_FIELD);
-  }
-
-  get owner() {
-    return getFieldValue(this.account.data, OWNER_NAME_FIELD);
-  }
-  get annualRevenue() {
-    return getFieldValue(this.account.data, ANNUAL_REVENUE_FIELD);
-  }
 }
