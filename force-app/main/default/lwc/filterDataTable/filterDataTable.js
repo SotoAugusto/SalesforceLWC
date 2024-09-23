@@ -27,6 +27,15 @@ const COLUMNS = [
     type: "url",
     typeAttributes: { label: "See record", target: "_blank" },
   },
+  {
+    label: "Send Record ID",
+    type: "button",
+    typeAttributes: {
+      label: "Send ID",
+      name: "send_id",
+      variant: "base",
+    },
+  },
   { label: "Name", fieldName: "Name", editable: true },
   { label: "Industry", fieldName: "Industry", editable: true },
   { label: "AnnualRevenue", fieldName: "AnnualRevenue", editable: true },
@@ -134,6 +143,9 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
     const row = event.detail.row;
 
     switch (actionName) {
+      case "send_id":
+        this.sendMessage(row.Id);
+        break;
       case "view":
         this[NavigationMixin.Navigate]({
           type: "standard__recordPage",
@@ -263,24 +275,13 @@ export default class FilterDataTable extends NavigationMixin(LightningElement) {
   } //end handleSave
 
   //LMS
-  // TODO: instead of sending through an input, send via a url on the datatable
+  // Send through LMS to unrelated component (accountsLists)
 
   @wire(MessageContext)
   messageContext;
-
-  // sendMessage(event) {
-  //   const payload = {
-  //     value: event.target.value,
-  //   };
-  //   // sender of message
-  //   publish(this.messageContext, MY_MESSAGE_CHANNEL, payload);
-  // }
-  sendMessage() {
-    const inputElement = this.template.querySelector(
-      'lightning-input[data-id="recordID"]',
-    );
+  sendMessage(recordId) {
     const payload = {
-      value: inputElement.value,
+      value: recordId,
     };
     // sender of message
     publish(this.messageContext, MY_MESSAGE_CHANNEL, payload);
