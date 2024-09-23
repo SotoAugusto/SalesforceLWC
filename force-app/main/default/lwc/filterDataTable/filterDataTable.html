@@ -70,12 +70,6 @@
                         onsave={handleSave}
                         draft-values={draftValues}>
                 </lightning-datatable>
-<!--                TODO: instead of sending through an input, send via a url on the datatable-->
-                <lightning-card title="Send through LMS to unrelated component">
-                    <lightning-input label="Input recordID here" data-id="recordID"></lightning-input>
-                    <lightning-button label="Send" onclick={sendMessage}></lightning-button>
-                </lightning-card>
-
             </template>
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
