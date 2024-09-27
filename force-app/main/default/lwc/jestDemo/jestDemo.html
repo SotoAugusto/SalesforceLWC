@@ -1,0 +1,16 @@
+<!-- Jest Demo -->
+<template>
+    <lightning-button class="renderButton" onclick={renderNewParagraph}>click me</lightning-button>
+    <template lwc:if={showNewParagraph}>
+        <p class="newParagraph">Wow I love Tacos</p>
+    </template>
+    <template for:each={tacoList} for:item="taco">
+        <p class="tacoInfo" key={taco.Id}>{taco.TacoType}</p>
+    </template>
+    <template for:each={accounts.data} for:item="accountItem">
+        <div class="acctInfo" key={accountItem.Id}>
+            {accountItem.Name}
+        </div>
+    </template>
+    <p class="tacoStuff">{tacoStuff}</p>
+</template>

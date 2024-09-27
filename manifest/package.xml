@@ -38,5 +38,9 @@
         <members>MyMessageChannel</members>
         <name>LightningMessageChannel</name>
     </types>
+    <types>
+        <members>README</members>
+        <name>CustomMetadata</name>
+    </types>
     <version>61.0</version>
 </Package>

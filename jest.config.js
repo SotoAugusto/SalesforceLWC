@@ -8,12 +8,6 @@ module.exports = {
     /* CSS library import fix in test context. See:
     https://github.com/salesforce/sfdx-lwc-jest/issues/288) */
     //any css file that is imported in the js file will be mocked with the following path
-    "^c/obd_SharedStyle$":
-      "<rootDir>/force-app/main/default/lwc/obd_SharedStyle/obd_SharedStyle.css",
-    "^c/orderingSharedStyle$":
-      "<rootDir>/force-app/main/default/lwc/orderingSharedStyle/orderingSharedStyle.css",
-    "^c/orderingSharedStyle$":
-      "<rootDir>/force-app/main/default/lwc/orderingMobileScreenStyles/orderingMobileScreenStyles.css",
     // Jest mocks
     "^@salesforce/apex$": "<rootDir>/force-app/test/jest-mocks/apex",
     "^@salesforce/schema$": "<rootDir>/force-app/test/jest-mocks/schema",
