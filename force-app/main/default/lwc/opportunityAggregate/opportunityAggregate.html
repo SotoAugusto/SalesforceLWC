@@ -1,0 +1,18 @@
+
+<!-- Opportunity Aggregate -->
+<template>
+    <lightning-card  title="Opportunity Aggregate">
+        <div class="slds-m-around_medium">
+        <template lwc:if={currentOpportunitiesList}>
+            <lightning-datatable
+                    key-field="Id"
+                    data={currentOpportunitiesList}
+                    columns={COLUMNS}
+                    show-row-number-column
+                    hide-checkbox-column
+            >
+            </lightning-datatable>
+        </template>
+        </div>
+    </lightning-card>
+</template>
