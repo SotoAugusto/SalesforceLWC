@@ -47,4 +47,7 @@ $RECYCLE.BIN/
 # Added by Illuminated Cloud
 /IlluminatedCloud/
 /out/
-target/
+target/!/force-app/main/default/classes/testingApex.cls
+
+!/force-app/main/default/classes/testingApex.cls-meta.xml
+!/force-app/main/default/classes/testingApex.cls
