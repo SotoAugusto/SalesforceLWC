@@ -1,44 +1,39 @@
 import { LightningElement, wire, track } from "lwc";
 import getAccountOppStats from "@salesforce/apex/OpportunityController.getAccountOppStats";
 
-export default class OpportunityAggregate extends LightningElement {
-  // COLUMNS = [
-  //   { label: "Account Id", fieldName: "Id" },
-  //   { label: "Account Name", fieldName: "Name" },
-  //   {
-  //     label: "Annual Revenue Sum",
-  //     fieldName: "AnnualRevenueSum",
-  //     type: "currency",
-  //   },
-  //   {
-  //     label: "Total Opportunities",
-  //     fieldName: "TotalOpportunities",
-  //     type: "number",
-  //   },
-  //   {
-  //     label: "Total Opportunity Amount",
-  //     fieldName: "TotalOpportunityAmount",
-  //     type: "currency",
-  //   },
-  //   {
-  //     label: "Max Opportunity Amount",
-  //     fieldName: "MaxOpportunityAmount",
-  //     type: "currency",
-  //   },
-  //   {
-  //     label: "Avg Revenue Per Opportunity",
-  //     fieldName: "AvgRevenuePerOpportunity",
-  //     type: "currency",
-  //   },
-  // ];
-  @track accountOpportunityData;
+export default class AccountOpportunityData extends LightningElement {
+  @track items = [];
+
   @wire(getAccountOppStats)
-  opportunitiesList({ error, data }) {
+  wiredAccountOppStats({ error, data }) {
     if (data) {
-      console.log("✅ data from @wire accountOpportunityData: ", data);
-      this.accountOpportunityData = data;
+      this.items = this.formatData(data);
     } else if (error) {
-      console.log("❌ error from @wire accountOpportunityData: ", error);
+      console.error("Error fetching account opportunity data:", error);
     }
-  } //end wire
-} //end component
+  }
+
+  formatData(data) {
+    return data.map((account) => {
+      return {
+        label: account.accountName,
+        name: account.accountId,
+        metatext: `Annual Revenue: ${account.annualRevenueSum},
+         Total Opportunities: ${account.totalOpportunities},
+          totalOpportunityAmount: ${account.totalOpportunityAmount},
+           MaxOpportunityAmount: ${account.maxOpportunityAmount},
+            AvgRevenuePerOpportunity: ${account.avgRevenuePerOpportunity}`,
+        expanded: false,
+        items: account.opportunities.map((opportunity) => {
+          return {
+            label: opportunity.Name,
+            name: opportunity.Id,
+            metatext: `Amount: ${opportunity.Amount}`,
+            expanded: true,
+            items: [],
+          };
+        }),
+      };
+    });
+  }
+}

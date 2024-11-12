@@ -4,10 +4,10 @@
     <option name="connections">
       <list>
         <IlluminatedCloudConnection>
-          <option name="connectionName" value="Insulet Main" />
+          <option name="connectionName" value="insulet-6b-dev-ed" />
           <option name="connectionType" value="OAUTH" />
           <option name="defaultModuleName" value="LWC" />
-          <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/Insulet_Main/OfflineSymbolTable.zip" />
+          <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/insulet_6b_dev_ed/OfflineSymbolTable.zip" />
         </IlluminatedCloudConnection>
       </list>
     </option>

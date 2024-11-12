@@ -1,29 +1,7 @@
-
-<!-- Opportunity Aggregate -->
 <template>
-    <template if:true={accountOpportunityData}>
-        <template for:each={accountOpportunityData} for:item="account">
-            <lightning-card key={account.accountId} title={account.accountName}>
-                <div class="slds-p-around_medium">
-                    <p><strong>Annual Revenue Sum:</strong> {account.annualRevenueSum}</p>
-                    <p><strong>Total Opportunities:</strong> {account.totalOpportunities}</p>
-                    <p><strong>Total Opportunity Amount:</strong> {account.totalOpportunityAmount}</p>
-                    <p><strong>Max Opportunity Amount:</strong> {account.maxOpportunityAmount}</p>
-                    <p><strong>Avg Revenue Per Opportunity:</strong> {account.avgRevenuePerOpportunity}</p>
-                    <h3>Opportunities:</h3>
-<!--                    call list of opportunities per account-->
-                    <template for:each={account.opportunities} for:item="opportunity">
-                        <lightning-card key={opportunity.Id} title={opportunity.Name}>
-                            <div class="slds-p-around_small">
-                                <p><strong>Amount:</strong> {opportunity.Amount}</p>
-                            </div>
-                        </lightning-card>
-                    </template>
-                </div>
-            </lightning-card>
-        </template>
-    </template>
-    <template if:false={accountOpportunityData}>
-        <p>Loading...</p>
-    </template>
+    <lightning-card title="Account Opportunity Data">
+        <div class="slds-p-around_large">
+            <lightning-tree items={items} header="Accounts and Opportunities" ></lightning-tree>
+        </div>
+    </lightning-card>
 </template>
