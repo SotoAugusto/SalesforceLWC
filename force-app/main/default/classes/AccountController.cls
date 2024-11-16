@@ -1,3 +1,4 @@
+// default is sharing rules
 public class AccountController {
     @AuraEnabled
     public static List<Account> getAccounts(Map<String, String> whereClauses) {
