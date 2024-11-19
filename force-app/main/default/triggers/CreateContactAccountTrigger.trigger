@@ -23,7 +23,12 @@ trigger CreateContactAccountTrigger on Contact (after insert) {
         }
         System.debug('accountsList: ' + accountsList);
 
-    if (Account.SObjectType.getDescribe().isAccessible() && Account.sObjectType.getDescribe().isCreateable()) {
+    if (Account.SObjectType.getDescribe().isAccessible()
+    && Account.sObjectType.getDescribe().isCreateable()
+    && Account.sObjectType.getDescribe().isUpdateable()
+    && Account.sObjectType.getDescribe().isDeleteable()
+    && !accountsList.isEmpty
+    ) {
         insert accountsList;
     } else{
         // cont.addErro
