@@ -14,7 +14,7 @@ trigger CreateAccountTaskTrigger on Account (after insert) {
         System.debug('acc: ' + acc);
         for (Integer tasknum = 1; tasknum <= 3; tasknum++) {
             Task taskRecord = new Task();
-            taskRecord.Subject = 'New Task ' + tasknum;
+            taskRecord.Subject = 'New Account Task ' + tasknum;
             taskRecord.WhatId = acc.Id;
             taskRecord.Status = 'In Progress';
             taskRecord.Priority = 'Normal';

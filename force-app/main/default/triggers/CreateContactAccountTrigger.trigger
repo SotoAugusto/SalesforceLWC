@@ -1,4 +1,5 @@
 trigger CreateContactAccountTrigger on Contact (after insert) {
+    // !problems with createAccountContact
 // https://salesforce.stackexchange.com/questions/27241/write-a-trigger-that-automatically-create-a-contact-when-account-is-created
 
 // Trigger que cuando cree un Contact, creeara una Account utilizando
@@ -26,8 +27,7 @@ trigger CreateContactAccountTrigger on Contact (after insert) {
     if (Account.SObjectType.getDescribe().isAccessible()
     && Account.sObjectType.getDescribe().isCreateable()
     && Account.sObjectType.getDescribe().isUpdateable()
-    && Account.sObjectType.getDescribe().isDeleteable()
-    && !accountsList.isEmpty
+    && !accountsList.isEmpty()
     ) {
         insert accountsList;
     } else{
