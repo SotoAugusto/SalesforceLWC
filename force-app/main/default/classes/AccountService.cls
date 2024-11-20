@@ -25,7 +25,24 @@ public with sharing class AccountService {
 
     public void createFullName() {
         for(Account account : (List<Account>) accounts) {
-            account.Full_Name__c = Strings.generateRandomString(25);
+            account.Name = Strings.generateRandomString(25);
         }
     }
+
+    public void createRelatedContact(){
+        for (Account accObj : newMap.values()) {
+            Contact contactObj = new Contact();
+            contactObj.AccountId = accObj.Id;
+            contactObj.LastName = accObj.Name + ' sitrar';
+            // contactList.add(contactObj);
+            System.debug('contactObj' + contactObj);
+            if (Contact.SObjectType.getDescribe().isAccessible()
+                && Contact.sObjectType.getDescribe().isCreateable()
+                && Contact.sObjectType.getDescribe().isUpdateable()
+            ) {
+                insert contactObj;
+            }
+        }
+    }
+
 }
