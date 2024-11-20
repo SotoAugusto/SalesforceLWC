@@ -30,18 +30,19 @@ public with sharing class AccountService {
     }
 
     public void createRelatedContact(){
-        for (Account accObj : newMap.values()) {
+        //! difference between newMap.values and accounts???
+        List<Contact> contactList = new List<Contact>();
+        for (Account accObj : newMap.values()){
             Contact contactObj = new Contact();
             contactObj.AccountId = accObj.Id;
             contactObj.LastName = accObj.Name + ' sitrar';
-            // contactList.add(contactObj);
-            System.debug('contactObj' + contactObj);
-            if (Contact.SObjectType.getDescribe().isAccessible()
-                && Contact.sObjectType.getDescribe().isCreateable()
-                && Contact.sObjectType.getDescribe().isUpdateable()
-            ) {
-                insert contactObj;
-            }
+            contactList.add(contactObj);
+        }
+        if (Contact.SObjectType.getDescribe().isAccessible()
+            && Contact.sObjectType.getDescribe().isCreateable()
+            && Contact.sObjectType.getDescribe().isUpdateable()
+        ) {
+            insert contactList;
         }
     }
 
@@ -63,6 +64,24 @@ public with sharing class AccountService {
             && Task.sObjectType.getDescribe().isCreateable()
         && !taskList.isEmpty()) {
             insert taskList;
+        }
+    }
+    public void createOpportunity(){
+        List<Opportunity> oppList = new List<Opportunity>();
+        for (Account accObj : newMap.values()) {
+            Opportunity oppObj = new Opportunity();
+            oppObj.Name = 'Opportunity for ' + accObj.Name + ' sitrar';
+            oppObj.StageName = 'Prospecting';
+            oppObj.CloseDate = System.today();
+            oppObj.AccountId = accObj.Id;
+            oppList.add(oppObj);
+        }
+        if (!oppList.isEmpty()
+            && Opportunity.SObjectType.getDescribe().isAccessible()
+            && Opportunity.sObjectType.getDescribe().isCreateable()
+            && Opportunity.sObjectType.getDescribe().isUpdateable()
+        ) {
+            insert oppList;
         }
     }
 

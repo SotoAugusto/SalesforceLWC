@@ -26,6 +26,8 @@ public with sharing class AccountHandler implements TriggerHandlerInterface {
         AccountService accountService = new AccountService(newMap);
         accountService.createRelatedContact();
         accountService.createTasks();
+        accountService.createOpportunity();
+
     }
 
     public void afterUpdate(Map<Id, SObject> oldMap, Map<Id, SObject> newMap) {
