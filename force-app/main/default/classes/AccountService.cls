@@ -45,4 +45,25 @@ public with sharing class AccountService {
         }
     }
 
+    public void createTasks(){
+        List<Task> taskList = new List<Task>();
+        Integer numOfTasks = 3;
+        for (Account accObj : newMap.values()) {
+            for (Integer taskNum = 1; taskNum <= numOfTasks; taskNum++) {
+                Task taskRecord = new Task();
+                taskRecord.Subject = 'New Account Task ' + taskNum + ' sitrar';
+                taskRecord.WhatId = accObj.Id;
+                taskRecord.Status = 'In Progress';
+                taskRecord.Priority = 'Normal';
+                System.debug('taskRecord: ' + taskRecord);
+                taskList.add(taskRecord);
+            }
+        }
+        if (Task.SObjectType.getDescribe().isAccessible()
+            && Task.sObjectType.getDescribe().isCreateable()
+        && !taskList.isEmpty()) {
+            insert taskList;
+        }
+    }
+
 }
