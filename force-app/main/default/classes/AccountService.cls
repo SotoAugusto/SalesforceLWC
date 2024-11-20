@@ -30,7 +30,6 @@ public with sharing class AccountService {
     }
 
     public void createRelatedContact(){
-        //! difference between newMap.values and accounts???
         List<Contact> contactList = new List<Contact>();
         for (Account accObj : newMap.values()){
             Contact contactObj = new Contact();
