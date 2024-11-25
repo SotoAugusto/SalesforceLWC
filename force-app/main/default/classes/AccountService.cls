@@ -4,6 +4,7 @@
 
 public with sharing class AccountService {
 
+    // test all methods that aren't constructors
     public static List<SObject> accounts;
     public static Map<Id, Account> newMap;
     public static Map<Id, Account> oldMap;
