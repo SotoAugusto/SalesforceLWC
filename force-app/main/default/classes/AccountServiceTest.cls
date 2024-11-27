@@ -23,43 +23,69 @@
 private class AccountServiceTest {
 
 
-        @TestSetup
-    static void makeData(){
-        Account myAccount = new Account(Name = 'Amir');
-        insert myAccount;
+    @TestSetup
+    public static void makeData(){
+        List<Account> accList = TestDataFactory.createAccounts(10);
+        insert accList;
     }
 
     @isTest
     static void createRelatedContactTestPositive() {
-        List<Account> listAcc = [SELECT Id, Name FROM Account WHERE Name = 'Amir'];
-        Map<Id, Account> newMap = new Map<Id, Account>();
-        newMap.put(listAcc[0].Id, listAcc[0]);
-        AccountService accountService = new AccountService(newMap);
-        String accNameContactLastN = listAcc[0].Name + ' sitrar';
-
+        Map<Id,Account> newMapAcc = new Map<Id,Account>([SELECT Id, Name FROM Account]);
         Test.startTest();
-
+        AccountService accountService = new AccountService(newMapAcc);
         accountService.createRelatedContact();
-        Contact newCont = [SELECT LastName FROM Contact WHERE  LastName =: accNameContactLastN LIMIT 1];
+        List<Contact> contactList = new List<Contact>([SELECT Id, LastName FROM Contact]);
 
-        Assert.areEqual(newCont.LastName, accNameContactLastN, 'Contact name doesnt match');
         Test.stopTest();
+        // should be 20 accounts, as in makedata we insert 10 accounts,
+        //  and in this test we query and create 10 more
+        Assert.areEqual(20, contactList.size(), 'Contact records not created');
+
+        // check lastname matches on account and contact
+        String contactLastN = contactList[contactList.size() - 1].LastName;
+        System.debug('contactLastN: ' + contactLastN);
+        String accountLastN = [SELECT Name FROM Account ORDER BY CreatedDate DESC LIMIT 1].Name + ' sitrar';
+        System.debug('accountLastN: ' + accountLastN);
+        Assert.areEqual(accountLastN , contactLastN, 'Contact name doesnt match');
+
+// String accNameContactLastN = listAcc[i].Name + ' sitrar';
+
+//         List<Account> listAcc = [SELECT Id, Name FROM Account];
+//         System.debug(listAcc);
+//         Map<Id, Account> newMap = new Map<Id, Account>();
+//         for (Integer i = 0; i < listAcc.size(); i++) {
+//             newMap.put(listAcc[i].Id, listAcc[i]);
+//             String accNameContactLastN = listAcc[i].Name + ' sitrar';
+//         }
+//          Test.startTest();
+//             AccountService accountService = new AccountService(newMap);
+//             accountService.createRelatedContact();
+//             Contact newCont = [SELECT LastName FROM Contact WHERE  LastName =: accNameContactLastN LIMIT 1];
+//             Test.stopTest();
+//             Assert.areEqual(newCont.LastName, accNameContactLastN, 'Contact name doesnt match');
     }
 
-    @IsTest
-    static void createTasksPOSITIVE(){
+    // @IsTest
+    // static void createTasksPOSITIVE(){
 
-        Test.startTest();
+    //     Test.startTest();
 
-        Assert.
+        // Assert.areEqual(expected, actual, message);
+        // Assert.areNotEqual(expected, actual, message);
+        // Assert.fail(message);
+        // Assert.isFalse(condition, message);
+        // Assert.isInstanceOfType(ObjectInstance, SystemType, message);
+        // Assert.isNull(variable, message);
+        // Assert.isNotNull(variable, message);
+
         // query what id = account, is true?
         // is empty assert?
         // is not null
 
-        assert
-        Test.stopTest();
+    //     Test.stopTest();
 
-    }
+    // }
 
 
 }
