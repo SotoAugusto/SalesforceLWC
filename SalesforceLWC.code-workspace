@@ -12,6 +12,8 @@
 			"javascript": true,
 			"css": true,
 			"html": true
-		}
+		},
+		"atlascode.bitbucket.enabled": false,
+		"atlascode.jira.enabled": false
 	}
 }
