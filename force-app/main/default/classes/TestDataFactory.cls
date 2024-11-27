@@ -9,4 +9,14 @@ public with sharing class TestDataFactory {
         }
         return caseList;
     }
+
+    public static List<Account> createAccounts(Integer numAccs){
+        List<Account> accList = new List<Account>();
+
+        for (Integer i = 0; i < numAccs; i++) {
+            Account newAcc = new Account(Name = 'Username ' + i);
+            accList.add(newAcc);
+        }
+        return accList;
+    }
 }
