@@ -3,8 +3,8 @@ public with sharing class TestDataFactory {
 
     public static List<Case> createCases(Integer numCases) {
         List<Case> caseList = new List<Case>();
-        for (Integer i = 0; i < numCases; i++) {
-            Case newCase = new Case(Subject = 'Subject ' + i);
+        for (Integer i = 1; i <= numCases; i++) {
+            Case newCase = new Case(Subject = 'test Subject ' + i);
             caseList.add(newCase);
         }
         return caseList;
@@ -13,10 +13,20 @@ public with sharing class TestDataFactory {
     public static List<Account> createAccounts(Integer numAccs){
         List<Account> accList = new List<Account>();
 
-        for (Integer i = 0; i < numAccs; i++) {
-            Account newAcc = new Account(Name = 'Username ' + i);
+        for (Integer i = 1; i <= numAccs; i++) {
+            Account newAcc = new Account(Name = 'test Username ' + i);
             accList.add(newAcc);
         }
         return accList;
+    }
+
+        public static List<Contact> createContacts(Integer numContacts){
+        List<Contact> contactList = new List<Contact>();
+
+        for (Integer i = 1; i <= contactList; i++) {
+            Contact newContact = new Contact(LastName = 'test LastName ' + i);
+            contactList.add(newContact);
+        }
+        return contactList;
     }
 }
