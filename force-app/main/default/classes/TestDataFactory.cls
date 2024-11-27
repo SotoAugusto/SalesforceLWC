@@ -23,7 +23,7 @@ public with sharing class TestDataFactory {
         public static List<Contact> createContacts(Integer numContacts){
         List<Contact> contactList = new List<Contact>();
 
-        for (Integer i = 1; i <= contactList; i++) {
+        for (Integer i = 1; i <= numContacts; i++) {
             Contact newContact = new Contact(LastName = 'test LastName ' + i);
             contactList.add(newContact);
         }
