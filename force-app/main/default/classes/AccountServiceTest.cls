@@ -22,15 +22,19 @@
 @isTest
 private class AccountServiceTest {
 
+    // List<Account> accList = new List<Account>();
 
     @TestSetup
-    public static void makeData(){
+    static void makeData(){
+        // accList = TestDataFactory.createAccounts(10);
         List<Account> accList = TestDataFactory.createAccounts(10);
         insert accList;
     }
 
     @isTest
     static void createRelatedContactTestPositive() {
+        // this.accList = accList;
+        // insert this.accList;
         Map<Id,Account> newMapAcc = new Map<Id,Account>([SELECT Id, Name FROM Account]);
         Test.startTest();
         AccountService accountService = new AccountService(newMapAcc);
@@ -38,6 +42,9 @@ private class AccountServiceTest {
         List<Contact> contactList = new List<Contact>([SELECT Id, LastName FROM Contact]);
 
         Test.stopTest();
+
+        Assert.isInstanceOfType(accountService, AccountService.class, 'Not expected type');
+
         // should be 20 accounts, as in makedata we insert 10 accounts,
         //  and in this test we query and create 10 more
         Assert.areEqual(20, contactList.size(), 'Contact records not created');
@@ -69,7 +76,7 @@ private class AccountServiceTest {
     // @IsTest
     // static void createTasksPOSITIVE(){
 
-    //     Test.startTest();
+        // Test.startTest();
 
         // Assert.areEqual(expected, actual, message);
         // Assert.areNotEqual(expected, actual, message);
@@ -83,7 +90,7 @@ private class AccountServiceTest {
         // is empty assert?
         // is not null
 
-    //     Test.stopTest();
+        // Test.stopTest();
 
     // }
 
