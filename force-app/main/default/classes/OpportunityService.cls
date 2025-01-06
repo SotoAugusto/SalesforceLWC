@@ -22,7 +22,7 @@ public with sharing class OpportunityService {
     public void createTasks() {
         List<Task> taskList = new List<Task>();
 
-        System.debug(newMap.values().size());
+        // System.debug('size map task in opp: ' + newMap.values().size());
         for (Opportunity oppObj : newMap.values()) {
             Task taskRecord = new Task();
             taskRecord.Subject = 'New Opp Task from sitrar for ' + oppObj.Name;
@@ -30,7 +30,9 @@ public with sharing class OpportunityService {
             taskRecord.Status = 'In Progress';
             taskRecord.Priority = 'Normal';
             taskList.add(taskRecord);
-        }
+                System.debug('taskRecord for opp: ' + taskRecord);
+            }
+        System.debug('taskList for opp size: ' + taskList.size());
         if (!taskList.isEmpty()
             && Opportunity.SObjectType.getDescribe().isAccessible()
             && Opportunity.sObjectType.getDescribe().isCreateable()
