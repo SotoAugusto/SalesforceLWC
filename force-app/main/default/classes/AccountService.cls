@@ -8,6 +8,11 @@ public with sharing class AccountService {
     public static List<SObject> accounts;
     public static Map<Id, Account> newMap;
     public static Map<Id, Account> oldMap;
+    // ! implement this flag, do not insert on test run
+    // ? check is running test method
+    // ? getFakeId
+    @TestVisible
+    public static Boolean runTriggerTest = false;
 
     public AccountService(List<SObject> accountList) {
         accounts = (List<Account>) accountList;
@@ -38,13 +43,18 @@ public with sharing class AccountService {
             contactObj.LastName = accObj.Name + ' sitrar';
             contactList.add(contactObj);
         }
+        System.debug('contactList size: ' + contactList.size());
+        System.debug('created contacts: ' + contactList);
+
         if (Contact.SObjectType.getDescribe().isAccessible()
             && Contact.sObjectType.getDescribe().isCreateable()
             && Contact.sObjectType.getDescribe().isUpdateable()
         ) {
             insert contactList;
-        }
+         }
+
     }
+
 
     public void createTasks(){
         List<Task> taskList = new List<Task>();
@@ -52,14 +62,15 @@ public with sharing class AccountService {
         for (Account accObj : newMap.values()) {
             for (Integer taskNum = 1; taskNum <= numOfTasks; taskNum++) {
                 Task taskRecord = new Task();
-                taskRecord.Subject = 'New Account Task ' + taskNum + ' sitrar';
+                taskRecord.Subject = 'New Acc ' + accObj.Name + ' Task ' + taskNum + ' sitrar';
                 taskRecord.WhatId = accObj.Id;
                 taskRecord.Status = 'In Progress';
                 taskRecord.Priority = 'Normal';
-                System.debug('taskRecord: ' + taskRecord);
                 taskList.add(taskRecord);
+                System.debug('taskRecord for account: ' + taskRecord);
             }
         }
+        System.debug('taskList for account size: ' + taskList.size());
         if (Task.SObjectType.getDescribe().isAccessible()
             && Task.sObjectType.getDescribe().isCreateable()
         && !taskList.isEmpty()) {
