@@ -29,4 +29,15 @@ public with sharing class TestDataFactory {
         }
         return contactList;
     }
+
+        public static List<Opportunity> createOpportunities(Integer numOpportunities){
+        List<Opportunity> opportuniyList = new List<Opportunity>();
+
+        for (Integer i = 1; i <= numOpportunities; i++) {
+            Opportunity newOpportunity = new Opportunity(Name = 'test Opportunity' + i, StageName = 'Prospecting', CloseDate = System.today());
+
+            opportuniyList.add(newOpportunity);
+        }
+        return opportuniyList;
+    }
 }
